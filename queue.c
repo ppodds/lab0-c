@@ -243,7 +243,8 @@ void q_swap(struct list_head *head)
  */
 void q_reverse(struct list_head *head)
 {
-    if (!head || list_empty(head))
+    // if the queue is NULL or its size <= 1, return
+    if (!head || list_empty(head) || head->next->next == head)
         return;
 
     struct list_head *cur = head->prev;
