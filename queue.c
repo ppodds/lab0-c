@@ -34,7 +34,7 @@ void q_free(struct list_head *l)
         return;
     struct list_head *li, *tmp;
     list_for_each_safe (li, tmp, l) {
-        element_t *elem = container_of(li, element_t, list);
+        element_t *elem = list_entry(li, element_t, list);
         list_del(li);
         q_release_element(elem);
     }
@@ -182,7 +182,7 @@ bool q_delete_mid(struct list_head *head)
         fast = fast->next->next;
     }
     list_del(slow);
-    q_release_element(container_of(slow, element_t, list));
+    q_release_element(list_entry(slow, element_t, list));
     return true;
     // https://leetcode.com/problems/delete-the-middle-node-of-a-linked-list/
 }
@@ -205,8 +205,8 @@ bool q_delete_dup(struct list_head *head)
     bool dup = false;
     for (li = (head)->next, safe = li->next; li != (head) && safe != (head);
          li = safe, safe = li->next) {
-        element_t *cur = container_of(li, element_t, list);
-        element_t *next = container_of(li->next, element_t, list);
+        element_t *cur = list_entry(li, element_t, list);
+        element_t *next = list_entry(li->next, element_t, list);
         if (strcmp(cur->value, next->value) == 0) {
             list_del(li);
             q_release_element(cur);
