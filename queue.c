@@ -105,12 +105,13 @@ element_t *q_remove_head(struct list_head *head, char *sp, size_t bufsize)
     // if the queue is NULL or empty, return NULL
     if (!head || list_empty(head))
         return NULL;
-    struct list_head *node = head->next;
-    list_del(node);
+
+    element_t *node = list_first_entry(head, element_t, list);
+    list_del(&node->list);
     // check if sp is non-NULL
     if (sp)
-        strncpy(sp, container_of(node, element_t, list)->value, bufsize - 1);
-    return container_of(node, element_t, list);
+        strncpy(sp, node->value, bufsize - 1);
+    return node;
 }
 
 /*
@@ -122,12 +123,13 @@ element_t *q_remove_tail(struct list_head *head, char *sp, size_t bufsize)
     // if the queue is NULL or empty, return NULL
     if (!head || list_empty(head))
         return NULL;
-    struct list_head *node = head->prev;
-    list_del(node);
+
+    element_t *node = list_last_entry(head, element_t, list);
+    list_del(&node->list);
     // check if sp is non-NULL
     if (sp)
-        strncpy(sp, container_of(node, element_t, list)->value, bufsize - 1);
-    return container_of(node, element_t, list);
+        strncpy(sp, node->value, bufsize - 1);
+    return node;
 }
 
 /*
