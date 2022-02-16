@@ -154,7 +154,7 @@ int q_size(struct list_head *head)
 bool q_delete_mid(struct list_head *head)
 {
     if (!head || list_empty(head))
-        return NULL;
+        return false;
 
     struct list_head *slow;
     struct list_head *fast = head->next;
