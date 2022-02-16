@@ -60,6 +60,15 @@ bool q_insert_head(struct list_head *head, char *s)
  */
 bool q_insert_tail(struct list_head *head, char *s)
 {
+    // check if queue is NULL
+    if (!head)
+        return false;
+    struct list_head *node = q_new();
+    if (!node)
+        return false;
+    // insert the node to the end of the queue
+    list_add_tail(node, head);
+    container_of(node, element_t, list)->value = strdup(s);
     return true;
 }
 
