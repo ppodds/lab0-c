@@ -61,6 +61,11 @@ bool q_insert_head(struct list_head *head, char *s)
     // insert the node to the beginning of the queue
     list_add(&node->list, head);
     node->value = strdup(s);
+    if (!node->value) {
+        list_del(&node->list);
+        free(node);
+        return false;
+    }
     return true;
 }
 
@@ -83,6 +88,11 @@ bool q_insert_tail(struct list_head *head, char *s)
     // insert the node to the end of the queue
     list_add_tail(&node->list, head);
     node->value = strdup(s);
+    if (!node->value) {
+        list_del(&node->list);
+        free(node);
+        return false;
+    }
     return true;
 }
 
