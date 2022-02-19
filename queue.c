@@ -168,8 +168,14 @@ int q_size(struct list_head *head)
     int len = 0;
     struct list_head *li;
 
-    list_for_each (li, head)
-        len++;
+    // reduce variable assignment as much as possible is helpful for performance
+    for (li = head->next; li != head; li = li->next->next) {
+        if (li->next == head) {
+            len++;
+            break;
+        }
+        len += 2;
+    }
     return len;
 }
 
