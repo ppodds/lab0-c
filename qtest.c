@@ -804,6 +804,58 @@ static bool do_shuffle(int argc, char *argv[])
     return !error_check();
 }
 
+static bool do_shuffle2(int argc, char *argv[])
+{
+    if (argc != 1) {
+        report(1, "%s takes no arguments", argv[0]);
+        return false;
+    }
+
+    if (!l_meta.l)
+        report(3, "Warning: Try to access null queue");
+    error_check();
+
+    if (exception_setup(true)) {
+        if (l_meta.l->next != l_meta.l && l_meta.l->next->next != l_meta.l) {
+            int n = q_size(l_meta.l);
+            char **values = malloc(n * sizeof(char *));
+            if (!values) {
+                report(1, "ERROR:  Out of memory");
+                return false;
+            }
+            // copy values from queue
+            struct list_head *li;
+            int cnt = 0;
+            list_for_each (li, l_meta.l) {
+                element_t *e = list_entry(li, element_t, list);
+                values[cnt] = e->value;
+                cnt++;
+            }
+            // do shuffle
+            srand(time(NULL));
+            for (int i = n; i > 1; i--) {
+                int choose = rand() % i;
+                // swap tail and cur
+                char *tmp = values[i - 1];
+                values[i - 1] = values[choose];
+                values[choose] = tmp;
+            }
+            // copy data from values
+            cnt = 0;
+            list_for_each (li, l_meta.l) {
+                element_t *e = list_entry(li, element_t, list);
+                e->value = values[cnt];
+                cnt++;
+            }
+            free(values);
+        }
+    }
+    exception_cancel();
+
+    show_queue(3);
+    return !error_check();
+}
+
 static void console_init()
 {
     ADD_COMMAND(new, "                | Create new queue");
@@ -838,6 +890,7 @@ static void console_init()
     ADD_COMMAND(swap,
                 "                | Swap every two adjacent nodes in queue");
     ADD_COMMAND(shuffle, "                | Shuffle queue");
+    ADD_COMMAND(shuffle2, "                | Shuffle queue");
     add_param("length", &string_length, "Maximum length of displayed string",
               NULL);
     add_param("malloc", &fail_probability, "Malloc failure probability percent",
