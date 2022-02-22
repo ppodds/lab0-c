@@ -70,8 +70,8 @@ static ssize_t rio_read(rio_t *rp, char *usrbuf, size_t n)
             }
         } else if (rp->rio_cnt == 0) { /* EOF */
             return 0;
-        } else
-            rp->rio_bufptr = rp->rio_buf; /* reset buffer ptr */
+        }
+        rp->rio_bufptr = rp->rio_buf; /* reset buffer ptr */
     }
 
     /* Copy min(n, rp->rio_cnt) bytes from internal buf to user buf */
