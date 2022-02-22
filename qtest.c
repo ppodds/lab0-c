@@ -36,7 +36,7 @@
 #include "console.h"
 #include "report.h"
 
-#include "tiny.h"
+#include "web.h"
 
 /* Settable parameters */
 

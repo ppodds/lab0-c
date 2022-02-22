@@ -1,4 +1,4 @@
-#include "tiny.h"
+#include "web.h"
 #include <arpa/inet.h> /* inet_ntoa */
 #include <dirent.h>
 #include <errno.h>

@@ -17,7 +17,7 @@
 
 #include "report.h"
 
-#include "tiny.h"
+#include "web.h"
 
 /* Some global values */
 int simulation = 0;
