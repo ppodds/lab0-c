@@ -1,6 +1,8 @@
 CC = gcc
 CFLAGS = -O1 -g -Wall -Werror -Idudect -I.
 
+SANITIZER = 1
+
 GIT_HOOKS := .git/hooks/applied
 DUT_DIR := dudect
 all: $(GIT_HOOKS) qtest
@@ -36,7 +38,7 @@ $(GIT_HOOKS):
 
 OBJS := qtest.o report.o console.o harness.o queue.o \
         random.o dudect/constant.o dudect/fixture.o dudect/ttest.o \
-        linenoise.o
+        linenoise.o tiny.o
 
 deps := $(OBJS:%.o=.%.o.d)
 

@@ -36,6 +36,8 @@
 #include "console.h"
 #include "report.h"
 
+#include "tiny.h"
+
 /* Settable parameters */
 
 #define HISTORY_LEN 20
@@ -856,6 +858,31 @@ static bool do_shuffle2(int argc, char *argv[])
     return !error_check();
 }
 
+static bool do_web(int argc, char *argv[])
+{
+    if (argc != 1) {
+        report(1, "%s takes no arguments", argv[0]);
+        return false;
+    }
+
+    if (exception_setup(true)) {
+        const int PORT = 9999;
+
+        if (listening == -1) {
+            listening = open_listenfd(PORT);
+            signal(SIGPIPE, SIG_IGN);
+            noise = false;
+            set_echo(false);
+            printf("listen on port %d, fd is %d\n", PORT, listening);
+        } else {
+            report(1, "web server is already turned on");
+        }
+    }
+    exception_cancel();
+
+    return !error_check();
+}
+
 static void console_init()
 {
     ADD_COMMAND(new, "                | Create new queue");
@@ -891,6 +918,7 @@ static void console_init()
                 "                | Swap every two adjacent nodes in queue");
     ADD_COMMAND(shuffle, "                | Shuffle queue");
     ADD_COMMAND(shuffle2, "                | Shuffle queue");
+    ADD_COMMAND(web, "                | open simple http server");
     add_param("length", &string_length, "Maximum length of displayed string",
               NULL);
     add_param("malloc", &fail_probability, "Malloc failure probability percent",
